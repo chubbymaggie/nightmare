@@ -12,10 +12,10 @@ import random
 import zipfile
 import tempfile
 
-from ole_file_mutator import main as replacer
+from melkor_mutator import main as melkor_replace
 
 #-----------------------------------------------------------------------
-class CMultipleOleFileMutator:
+class CMultipleMelkorMutator:
   def __init__(self, samples_path, total, output_zip):
     self.samples_path = samples_path
     self.total = total
@@ -24,14 +24,7 @@ class CMultipleOleFileMutator:
   def mutate(self):
     with zipfile.ZipFile(self.output_zip, "w") as fuzz_zip:
       fuzz_zip.comment = "NIGHTMARE"
-      i = 0
-      
-      max_tries = self.total*2
-      tries = 0
-      while i < self.total:
-        tries += 1
-        if tries > max_tries:
-          break
+      for i in range(self.total):
         name = tempfile.mktemp()
         while 1:
           template = random.choice(os.listdir(self.samples_path))
@@ -40,31 +33,21 @@ class CMultipleOleFileMutator:
             break
           continue
         
+        melkor_replace(template, name)
         try:
-          replacer(template, name)
-          i += 1
-        except:
-          print "Error with OLE2 %s:" % template, sys.exc_info()[1]
-          # Some error occurred reading the suppossed OLE2 file, remove
-          # temporary files and retry again...
-
+          fuzz_zip.write(name)
+          
+          # Add also the .diff file if it was created:
           if os.path.exists(name + ".diff"):
             fuzz_zip.write(name + ".diff")
             os.remove(name + ".diff")
           os.remove(name)
-          continue
-        
-        fuzz_zip.write(name)
-        
-        # Add also the .diff file if it was created:
-        if os.path.exists(name + ".diff"):
-          fuzz_zip.write(name + ".diff")
-          os.remove(name + ".diff")
-        os.remove(name)
+        except:
+          print "Error:", sys.exc_info()[1]
 
 #-----------------------------------------------------------------------
 def main(path, number, output):
-  mutator = CMultipleOleFileMutator(path, int(number), output)
+  mutator = CMultipleMelkorMutator(path, int(number), output)
   mutator.mutate()
 
 #-----------------------------------------------------------------------

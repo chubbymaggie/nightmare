@@ -1,14 +1,14 @@
 Nightmare 0.0.4
 ---------------
 
-01 Download, build and install diStorm64. Install the Python bindings,
-   you will need them. The version used for this project can be found
-   here: 
+01 Download, build and install Capstone. Find the latest stable version
+   of this disassembly engine at:
    
-    https://pyew.googlecode.com/files/distorm64-pkg1.7.30.zip
+    http://www.capstone-engine.org
     
-   NOTE: In the short future, diStorm will be completely replaced with
-   Capstone.
+   A quick way to install Capstone is by using "pip", like followings:
+   
+   $ sudo pip install capstone
 
 02 Create the schema in a MySQL or SQLite database using either the 
    script sql/nightmare.sql or sql/nightmare_sqlite.sql. You  will need
@@ -42,6 +42,10 @@ Nightmare 0.0.4
    URL: 
    
     https://github.com/earl/beanstalkc/
+   
+   You can download the server, beanstalkd, from the following URL:
+   
+    http://kr.github.io/beanstalkd/
    
 04 Install radamsa (put it somewhere in your $PATH). You can download it
    from here:
@@ -101,7 +105,7 @@ db=/home/your/path/to/nightmare/db.sqlite
 07 The default username and password for the web app are the following:
    
    Username: admin
-   Password: tarakogayer
+   Password: nightmare
    
    If you want to change them you will need to modify the file:
    
@@ -113,11 +117,9 @@ db=/home/your/path/to/nightmare/db.sqlite
 (...)
 # Administrator username
 NFP_USER="admin"
-# Administrator password (SHA1 hash, default is 'tarakogayer')
-NFP_PASS="8d5b3795207f559b7da536f0401f91d10f726802"
+# Administrator password (SHA1 hash, default is 'nightmare')
+NFP_PASS="0ffa932690225172d291718510fd8a31b44d5698"
 (...)
-
-   PS: Please don't ask why is this the default password. Trolling.
 
 08 Create a new fuzzer. You can very probably just add a new entry in
    the file $INSTALL_DIR/fuzzers/generic.cfg. For example, if you want
